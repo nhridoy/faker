@@ -133,14 +133,14 @@ def _thai_strftime(
         # of the week.
         year_G = int(dt_obj.strftime("%G"))
         if buddhist_era:
-            year_G = year_G + _BE_AD_DIFFERENCE
+            year_G += _BE_AD_DIFFERENCE
         str_ = f"{year_G:04}"
     elif fmt_char == "g":
         # Same year as in ``%G'',
         # but as a decimal number without century (00-99).
         year_G = int(dt_obj.strftime("%G"))
         if buddhist_era:
-            year_G = year_G + _BE_AD_DIFFERENCE
+            year_G += _BE_AD_DIFFERENCE
         str_ = f"{year_G % 100:02}"
     elif fmt_char == "v":
         # BSD extension, ' 6-Oct-1976'
@@ -222,39 +222,34 @@ def thai_strftime(
                         else:
                             str_ = _std_strftime(dt_obj, fmt_char)
 
-                        if fmt_char_ext == "-":
+                        if fmt_char_ext == "#":
+                            # GNU libc extension,
+                            # swap case - useful for %Z
+                            str_ = str_.swapcase()
+                        elif fmt_char_ext == "-":
                             # GNU libc extension,
                             # no padding
                             if str_[0] and str_[0] in " 0":
                                 str_ = str_[1:]
-                        elif fmt_char_ext == "_":
-                            # GNU libc extension,
-                            # explicitly specify space (" ") for padding
-                            if str_[0] and str_[0] == "0":
-                                str_ = " " + str_[1:]
                         elif fmt_char_ext == "0":
                             # GNU libc extension,
                             # explicitly specify zero ("0") for padding
                             if str_[0] and str_[0] == " ":
-                                str_ = "0" + str_[1:]
-                        elif fmt_char_ext == "^":
-                            # GNU libc extension,
-                            # convert to upper case
-                            str_ = str_.upper()
-                        elif fmt_char_ext == "#":
-                            # GNU libc extension,
-                            # swap case - useful for %Z
-                            str_ = str_.swapcase()
-                        elif fmt_char_ext == "E":
-                            # POSIX extension,
-                            # uses the locale's alternative representation
-                            # Not implemented yet
-                            pass
+                                str_ = f"0{str_[1:]}"
                         elif fmt_char_ext == "O":
                             # POSIX extension,
                             # uses the locale's alternative numeric symbols
                             str_ = str_.translate(_HA_TH_DIGITS)
-                        i = i + 1  # consume char after format char
+                        elif fmt_char_ext == "^":
+                            # GNU libc extension,
+                            # convert to upper case
+                            str_ = str_.upper()
+                        elif fmt_char_ext == "_":
+                            # GNU libc extension,
+                            # explicitly specify space (" ") for padding
+                            if str_[0] and str_[0] == "0":
+                                str_ = f" {str_[1:]}"
+                        i += 1
                     else:
                         # format char at string's end has no meaning
                         str_ = fmt_char_ext
@@ -262,7 +257,7 @@ def thai_strftime(
                     # no known localization available, use Python's default
                     str_ = _std_strftime(dt_obj, fmt_char)
 
-                i = i + 1  # consume char after "%"
+                i += 1
             else:
                 # % char at string's end has no meaning
                 str_ = "%"
@@ -270,7 +265,7 @@ def thai_strftime(
             str_ = fmt[i]
 
         thaidate_parts.append(str_)
-        i = i + 1
+        i += 1
 
     thaidate_text = "".join(thaidate_parts)
 
@@ -331,9 +326,7 @@ class Provider(DateParseTypeProvider):
         :param buddhist:_era use Buddist era or not (default: True)
         :example: '20'
         """
-        end_century = 22
-        if buddhist_era:
-            end_century = 26
+        end_century = 26 if buddhist_era else 22
         text = str(self.random_element(range(1, end_century)))
         if thai_digit:
             text = text.translate(_HA_TH_DIGITS)

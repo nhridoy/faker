@@ -498,7 +498,7 @@ class TestDateTime(unittest.TestCase):
             )
 
             # Ensure relative unix_times partially-constrained by a start time are generated correctly
-            one_day_ago = datetime.today() - timedelta(days=1)
+            one_day_ago = datetime.now() - timedelta(days=1)
 
             recent_unix_time = self.fake.unix_time(start_datetime=one_day_ago)
 

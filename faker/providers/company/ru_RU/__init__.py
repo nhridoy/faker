@@ -5,10 +5,7 @@ from .. import Provider as CompanyProvider
 
 def calculate_checksum(value: str) -> str:
     factors = [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8][-len(value) :]
-    check_sum = 0
-    for number, factor in zip(value, factors):
-        check_sum += int(number) * factor
-
+    check_sum = sum(int(number) * factor for number, factor in zip(value, factors))
     return str((check_sum % 11) % 10)
 
 
@@ -1089,12 +1086,12 @@ class Provider(CompanyProvider):
         adj_first: str = self.random_element(self.catch_phrase_adj[0])
         adj_second: str = self.random_element(self.catch_phrase_adj[1])
         if noun in self.catch_phrase_nouns_fem:
-            adj_first = adj_first[:-2] + "ая"
-            adj_second = adj_second[:-2] + "ая"
+            adj_first = f"{adj_first[:-2]}ая"
+            adj_second = f"{adj_second[:-2]}ая"
         elif noun in self.catch_phrase_nouns_neu:
-            adj_first = adj_first[:-2] + "ое"
-            adj_second = adj_second[:-2] + "ое"
-        return adj_first + " и " + adj_second + " " + noun
+            adj_first = f"{adj_first[:-2]}ое"
+            adj_second = f"{adj_second[:-2]}ое"
+        return f"{adj_first} и {adj_second} {noun}"
 
     def large_company(self) -> str:
         """
@@ -1154,7 +1151,7 @@ class Provider(CompanyProvider):
         region: str = "%02d" % self.random_int(min=1, max=92)
         tail: str = "%09d" % self.random_int(min=1, max=999999999)
 
-        result: str = "3" + year + region + tail
+        result: str = f"3{year}{region}{tail}"
 
         return result + str((int(result) % 13) % 10)
 

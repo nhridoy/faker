@@ -9,16 +9,16 @@ class Provider(SsnProvider):
         Ukrainian "Реєстраційний номер облікової картки платника податків"
         also known as "Ідентифікаційний номер фізичної особи".
         """
-        digits = []
+        digits = [
+            int(digit)
+            for digit in str(
+                (self.generator.date_object() - date(1899, 12, 31)).days
+            )
+        ]
 
-        # Number of days between 1899-12-31 and a birth date
-        for digit in str((self.generator.date_object() - date(1899, 12, 31)).days):
-            digits.append(int(digit))
 
         # Person's sequence number
-        for _ in range(4):
-            digits.append(self.random_int(0, 9))
-
+        digits.extend(self.random_int(0, 9) for _ in range(4))
         checksum = (
             digits[0] * -1
             + digits[1] * 5

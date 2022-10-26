@@ -466,4 +466,4 @@ class Provider(AddressProvider):
 
     def building_number(self) -> str:
         numeric_part = super().random_int(1, 250)
-        return str(numeric_part) + "."
+        return f"{str(numeric_part)}."

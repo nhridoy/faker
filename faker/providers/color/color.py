@@ -141,7 +141,7 @@ class RandomColor:
         if generator:
             self.random = generator.random
         else:
-            self.seed = seed if seed else random.randint(0, sys.maxsize)
+            self.seed = seed or random.randint(0, sys.maxsize)
             self.random = random.Random(self.seed)
 
         for color_name, color_attrs in self.colormap.items():
@@ -228,22 +228,20 @@ class RandomColor:
 
     def set_format(self, hsv: Tuple[int, int, int], color_format: str) -> str:
         """Handle conversion of HSV values into desired format."""
-        if color_format == "hsv":
-            color = f"hsv({hsv[0]}, {hsv[1]}, {hsv[2]})"
-
-        elif color_format == "hsl":
+        if color_format == "hsl":
             hsl = self.hsv_to_hsl(hsv)
-            color = f"hsl({hsl[0]}, {hsl[1]}, {hsl[2]})"
+            return f"hsl({hsl[0]}, {hsl[1]}, {hsl[2]})"
+
+        elif color_format == "hsv":
+            return f"hsv({hsv[0]}, {hsv[1]}, {hsv[2]})"
 
         elif color_format == "rgb":
             rgb = self.hsv_to_rgb(hsv)
-            color = f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
+            return f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
 
         else:
             rgb = self.hsv_to_rgb(hsv)
-            color = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
-
-        return color
+            return f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
 
     def get_minimum_brightness(self, h: int, s: int) -> int:
         """Return the minimum allowed brightness for ``h`` and ``s``."""
@@ -302,8 +300,7 @@ class RandomColor:
             hue_range: Tuple[int, int] = color["hue_range"][0]
             if hue_range[0] <= hue <= hue_range[1]:
                 return self.colormap[color_name]
-        else:
-            raise ValueError("Value of hue `%s` is invalid." % hue)
+        raise ValueError(f"Value of hue `{hue}` is invalid.")
 
     def random_within(self, r: Sequence[int]) -> int:
         """Return a random integer within the range ``r``."""

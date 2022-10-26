@@ -15,7 +15,7 @@ class FooProvider:
         return "foobar"
 
     def foo_formatter_with_arguments(self, param="", append=""):
-        return "baz" + str(param) + str(append)
+        return f"baz{str(param)}{str(append)}"
 
 
 @pytest.fixture(autouse=True)

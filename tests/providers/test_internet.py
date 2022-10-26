@@ -324,10 +324,7 @@ class TestInternetProvider:
             "TRACE",
         ]
 
-        got_methods = set()
-        for _ in range(num_samples):
-            got_methods.add(faker.http_method())
-
+        got_methods = {faker.http_method() for _ in range(num_samples)}
         assert expected_methods == sorted(got_methods)
 
     def test_dga(self, faker):
@@ -737,7 +734,7 @@ class TestEnPh:
     num_samples = 100
 
     def test_domain_name(self, faker, num_samples):
-        for i in range(num_samples):
+        for _ in range(num_samples):
             domain = faker.domain_name()
             validate_domain(domain)
 

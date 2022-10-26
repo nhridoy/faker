@@ -1584,14 +1584,13 @@ class Provider(AddressProvider):
             if suffix in self.street_suffixes_masc:
                 if street in self.street_titles_irregular_masc.keys():
                     result = self.street_titles_irregular_masc[street]
+                elif stem.endswith("ск") or stem.endswith("цк"):
+                    result = f"{stem}ий"
                 else:
-                    if stem.endswith("ск") or stem.endswith("цк"):
-                        result = stem + "ий"
-                    else:
-                        result = stem + "ый"
+                    result = f"{stem}ый"
             elif suffix in self.street_suffixes_neu:
                 if street in self.street_titles_irregular_neu.keys():
                     result = self.street_titles_irregular_neu[street]
                 else:
-                    result = stem + "ое"
+                    result = f"{stem}ое"
         return f"{suffix} {result}"

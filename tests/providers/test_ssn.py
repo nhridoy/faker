@@ -136,7 +136,7 @@ class TestSvSE(unittest.TestCase):
         for _ in range(100):
             vat_id = self.fake.vat_id()
             assert re.search(r"SE\d{12}", vat_id)
-            assert int(vat_id[2]) in (1, 2, 3, 5, 6, 7, 8, 9)
+            assert int(vat_id[2]) in {1, 2, 3, 5, 6, 7, 8, 9}
             assert int(vat_id[6:8]) >= 20
 
     def test_org_and_vat_id(self):
@@ -168,7 +168,7 @@ class TestCsCZ(unittest.TestCase):
     def test_birth_number(self):
         for _ in range(100):
             birth_number = self.fake.birth_number()
-            assert len(birth_number) in [10, 11]
+            assert len(birth_number) in {10, 11}
             assert birth_number[6] == "/"
             assert int(birth_number.replace("/", "")) % 11 == 0
 
@@ -185,7 +185,7 @@ class TestSkSK(unittest.TestCase):
     def test_birth_number(self):
         for _ in range(100):
             birth_number = self.fake.birth_number()
-            assert len(birth_number) in [10, 11]
+            assert len(birth_number) in {10, 11}
             assert birth_number[6] == "/"
             assert int(birth_number.replace("/", "")) % 11 == 0
 
@@ -957,7 +957,7 @@ class TestNlBE(unittest.TestCase):
 
             # validate checksum calculation
             # Since the century is not part of ssn, try both below and above year 2000
-            ssn_below = int(ssn[0:9])
+            ssn_below = int(ssn[:9])
             chksum_below = 97 - (ssn_below % 97)
             ssn_above = ssn_below + 2000000000
             chksum_above = 97 - (ssn_above % 97)
@@ -1073,23 +1073,23 @@ class TestEnPh(unittest.TestCase):
         Faker.seed(0)
 
     def test_PH_sss(self):
-        for i in range(self.num_sample_runs):
+        for _ in range(self.num_sample_runs):
             assert self.sss_pattern.match(self.fake.sss())
 
     def test_PH_gsis(self):
-        for i in range(self.num_sample_runs):
+        for _ in range(self.num_sample_runs):
             assert self.gsis_pattern.match(self.fake.gsis())
 
     def test_PH_philhealth(self):
-        for i in range(self.num_sample_runs):
+        for _ in range(self.num_sample_runs):
             assert self.philhealth_pattern.match(self.fake.philhealth())
 
     def test_PH_pagibig(self):
-        for i in range(self.num_sample_runs):
+        for _ in range(self.num_sample_runs):
             assert self.pagibig_pattern.match(self.fake.pagibig())
 
     def test_PH_umid(self):
-        for i in range(self.num_sample_runs):
+        for _ in range(self.num_sample_runs):
             assert self.umid_pattern.match(self.fake.umid())
 
 

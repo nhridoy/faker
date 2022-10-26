@@ -261,7 +261,7 @@ class FactoryTestCase(unittest.TestCase):
         # Locales known to contain `*_male` and `*_female`.
         for locale in ("bg_BG", "dk_DK", "en", "ru_RU", "tr_TR"):
             fake = Faker(locale=locale)
-            for x in range(20):  # Probabilistic testing.
+            for _ in range(20):
                 self.assertIsInstance(fake.prefix(), str)
                 self.assertIsInstance(fake.suffix(), str)
 

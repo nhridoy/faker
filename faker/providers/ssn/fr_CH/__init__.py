@@ -43,4 +43,4 @@ class Provider(SsnProvider):
             return remainder
 
         vat_id: str = self.numerify("########")
-        return "CHE" + vat_id + str(_checksum(vat_id))
+        return f"CHE{vat_id}{str(_checksum(vat_id))}"

@@ -46,9 +46,7 @@ class TestFiFi:
 
     def _has_valid_checksum(self, company_id):
         factors = [7, 9, 10, 5, 8, 4, 2]
-        checksum = 0
-        for x, y in zip(company_id[:-2], factors):
-            checksum += int(x) * y
+        checksum = sum(int(x) * y for x, y in zip(company_id[:-2], factors))
         checksum %= 11
         checksum = 11 - checksum if checksum else 0
         return int(company_id[-1]) == checksum
@@ -241,9 +239,8 @@ class TestEnPh:
             company = faker.company()
             if company.split()[-1] in self.company_suffixes and company.split()[-2] in self.company_types:
                 continue
-            else:
-                national_corporation_match = self.national_corporation_pattern.fullmatch(company)
-                assert national_corporation_match and national_corporation_match.group(1) in self.company_products
+            national_corporation_match = self.national_corporation_pattern.fullmatch(company)
+            assert national_corporation_match and national_corporation_match.group(1) in self.company_products
 
 
 class TestFilPh(TestEnPh):
@@ -309,7 +306,7 @@ class TestRuRu:
         for _ in range(num_samples):
             kpp = faker.kpp()
             assert len(kpp) == 9
-            assert 1 <= int(kpp[0:2]) <= 92
+            assert 1 <= int(kpp[:2]) <= 92
             assert int(kpp[2:4]) > 0
             assert kpp[4:6] in ("01", "43", "44", "45")
 

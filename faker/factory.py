@@ -12,7 +12,7 @@ from .utils.loading import list_module
 logger = logging.getLogger(__name__)
 
 # identify if python is being run in interactive mode. If so, disable logging.
-inREPL = bool(getattr(sys, "ps1", False))
+inREPL = getattr(sys, "ps1", False)
 if inREPL:
     logger.setLevel(logging.CRITICAL)
 else:

@@ -1156,4 +1156,4 @@ class Provider(AddressProvider):
     state = administrative_unit
 
     def city_with_postcode(self) -> str:
-        return self.postcode() + " " + self.random_element(self.cities)
+        return f"{self.postcode()} {self.random_element(self.cities)}"

@@ -363,4 +363,4 @@ class TestFrFr:
         ]
         for _ in range(num_samples):
             phone_number = faker.phone_number()
-            assert any([re.match(pattern, phone_number) for pattern in patterns])
+            assert any(re.match(pattern, phone_number) for pattern in patterns)

@@ -21,9 +21,7 @@ def checksum(digits: Sequence[int], scale: List[int]) -> int:
     https://no.wikipedia.org/wiki/F%C3%B8dselsnummer
     """
     chk_nbr = 11 - (sum(map(operator.mul, digits, scale)) % 11)
-    if chk_nbr == 11:
-        return 0
-    return chk_nbr
+    return 0 if chk_nbr == 11 else chk_nbr
 
 
 class Provider(SsnProvider):

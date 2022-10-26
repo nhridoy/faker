@@ -18,7 +18,7 @@ def slugify(value: str, allow_dots: bool = False, allow_unicode: bool = False) -
     """
     pattern: Pattern = _re_pattern_allow_dots if allow_dots else _re_pattern
 
-    value = str(value)
+    value = value
     if allow_unicode:
         value = unicodedata.normalize("NFKC", value)
         value = pattern.sub("", value).strip().lower()

@@ -135,12 +135,11 @@ class Generator:
         generator.get_arguments('small', 'max_value')
         generator.get_arguments('small')
         """
-        if group in self.__config["arguments"] and argument:
-            result = self.__config["arguments"][group].get(argument)
-        else:
-            result = self.__config["arguments"].get(group)
-
-        return result
+        return (
+            self.__config["arguments"][group].get(argument)
+            if group in self.__config["arguments"] and argument
+            else self.__config["arguments"].get(group)
+        )
 
     def del_arguments(self, group: str, argument: Optional[str] = None) -> Any:
         """
@@ -151,14 +150,14 @@ class Generator:
         generator.del_arguments('small', 'max_value')
         """
         if group in self.__config["arguments"]:
-            if argument:
-                result = self.__config["arguments"][group].pop(argument)
-            else:
-                result = self.__config["arguments"].pop(group)
-        else:
-            result = None
+            return (
+                self.__config["arguments"][group].pop(argument)
+                if argument
+                else self.__config["arguments"].pop(group)
+            )
 
-        return result
+        else:
+            return None
 
     def parse(self, text: str) -> str:
         """

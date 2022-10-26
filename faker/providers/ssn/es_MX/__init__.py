@@ -108,10 +108,7 @@ def _reduce_digits(number: int) -> int:
     """
     if number == 0:
         return 0
-    if number % 9 == 0:
-        return 9
-
-    return number % 9
+    return 9 if number % 9 == 0 else number % 9
 
 
 def ssn_checksum(digits: map) -> int:
@@ -221,6 +218,4 @@ class Provider(BaseProvider):
         birth_date = birthday.strftime("%y%m%d")
         disambiguation_code = random.choice(ALPHANUMERIC) + random.choice(ALPHANUMERIC) + random.choice(ALPHANUMERIC)
 
-        random_rfc = name_initials + birth_date + disambiguation_code
-
-        return random_rfc
+        return name_initials + birth_date + disambiguation_code

@@ -730,7 +730,7 @@ class Provider(BankProvider):
         region: str = self.random_element(self.region_codes)
         department_code: str = self.numerify(self.random_element(self.department_code_formats))
         credit_organization_code: str = self.numerify(self.random_element(self.credit_organization_code_formats))
-        return "04" + region + department_code + credit_organization_code
+        return f"04{region}{department_code}{credit_organization_code}"
 
     def correspondent_account(self) -> str:
         """Generate a correspondent account number.

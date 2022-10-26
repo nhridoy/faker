@@ -225,26 +225,33 @@ class Provider(BaseProvider):
             sign = "+" if positive else self.random_element(("+", "-"))
 
         if sign == "+":
-            if max_value is not None:
-                left_number = str(self.random_int(max(min_value or 0, 0), max_value))
-            else:
+            if max_value is None:
                 min_left_digits = math.ceil(math.log10(max(min_value or 1, 1)))
                 if left_digits is None:
                     left_digits = self.random_int(min_left_digits, max_left_random_digits)
-                left_number = "".join([str(self.random_digit()) for i in range(0, left_digits)]) or "0"
-        else:
-            if min_value is not None:
-                left_number = str(self.random_int(max(max_value or 0, 0), abs(min_value)))
+                left_number = (
+                    "".join([str(self.random_digit()) for _ in range(left_digits)])
+                    or "0"
+                )
+
             else:
-                min_left_digits = math.ceil(math.log10(abs(min(max_value or 1, 1))))
-                if left_digits is None:
-                    left_digits = self.random_int(min_left_digits, max_left_random_digits)
-                left_number = "".join([str(self.random_digit()) for i in range(0, left_digits)]) or "0"
+                left_number = str(self.random_int(max(min_value or 0, 0), max_value))
+        elif min_value is not None:
+            left_number = str(self.random_int(max(max_value or 0, 0), abs(min_value)))
+        else:
+            min_left_digits = math.ceil(math.log10(abs(min(max_value or 1, 1))))
+            if left_digits is None:
+                left_digits = self.random_int(min_left_digits, max_left_random_digits)
+            left_number = (
+                "".join([str(self.random_digit()) for _ in range(left_digits)])
+                or "0"
+            )
+
 
         if right_digits is None:
             right_digits = self.random_int(0, max_random_digits)
 
-        right_number = "".join([str(self.random_digit()) for i in range(0, right_digits)])
+        right_number = "".join([str(self.random_digit()) for _ in range(right_digits)])
 
         result = Decimal(f"{sign}{left_number}.{right_number}")
 
@@ -439,9 +446,7 @@ class Provider(BaseProvider):
         if not issubclass(enum_cls, Enum):
             raise TypeError("'enum_cls' must be an Enum type")
 
-        members: List[TEnum] = list(cast(Iterable[TEnum], enum_cls))
-
-        if len(members) < 1:
+        if members := list(cast(Iterable[TEnum], enum_cls)):
+            return self.random_element(members)
+        else:
             raise EmptyEnumException(f"The provided Enum: '{enum_cls.__name__}' has no members.")
-
-        return self.random_element(members)
