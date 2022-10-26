@@ -8057,12 +8057,11 @@ class Provider(SsnProvider):
         name_consonants = self._get_consonants(name)
         cons_len = len(name_consonants)
         if cons_len >= 4:
-            name_part = "".join([name_consonants[0], name_consonants[1], name_consonants[3]])
+            return "".join([name_consonants[0], name_consonants[1], name_consonants[3]])
         elif cons_len < 3:
-            name_part = "".join(name_consonants + self._get_vowels(name))[:3]
+            return "".join(name_consonants + self._get_vowels(name))[:3]
         else:
-            name_part = "".join(name_consonants)
-        return name_part
+            return "".join(name_consonants)
 
     def _get_surname_letters(self) -> str:
         """
@@ -8080,33 +8079,25 @@ class Provider(SsnProvider):
         surname_consonants = self._get_consonants(surname)
         cons_len = len(surname_consonants)
 
-        if cons_len < 3:
-            surname_part = "".join(surname_consonants + self._get_vowels(surname))[:3]
-        else:
-            surname_part = "".join(surname_consonants)[:3]
-        return surname_part
+        return (
+            "".join(surname_consonants + self._get_vowels(surname))[:3]
+            if cons_len < 3
+            else "".join(surname_consonants)[:3]
+        )
 
     @staticmethod
     def _get_vowels(sequence: str) -> list:
         """
         Returns list of vowels in provided string
         """
-        vowels = []
-        for char in sequence:
-            if char in VOWELS:
-                vowels.append(char)
-        return vowels
+        return [char for char in sequence if char in VOWELS]
 
     @staticmethod
     def _get_consonants(sequence: str) -> list:
         """
         Returns list of consonants in provided string
         """
-        consonants = []
-        for char in sequence:
-            if char in CONSONANTS:
-                consonants.append(char)
-        return consonants
+        return [char for char in sequence if char in CONSONANTS]
 
     @staticmethod
     def _pad_shorter(sequence: str) -> str:

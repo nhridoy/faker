@@ -114,7 +114,7 @@ class Provider(CompanyProvider):
             begin_pos = catch_phrase.find(word)
             end_pos = catch_phrase.find(word, begin_pos + 1)
 
-            if begin_pos != -1 and begin_pos != end_pos:
+            if begin_pos not in [-1, end_pos]:
                 return False
 
         return True
@@ -137,4 +137,4 @@ class Provider(CompanyProvider):
             max_sequential_digits = 2
 
         sequential_number = str(self.random_number(max_sequential_digits)).zfill(4)
-        return self.numerify(self.siren() + " " + sequential_number + "#")
+        return self.numerify(f"{self.siren()} {sequential_number}#")

@@ -4,6 +4,8 @@ from typing import Dict
 from .. import Provider as PersonProvider
 
 
+
+
 class Provider(PersonProvider):
     formats = (
         "{{first_name_male}} {{last_name}}",
@@ -806,9 +808,7 @@ class Provider(PersonProvider):
         )
     )
 
-    first_names: Dict[str, float] = first_names_male.copy()
-    first_names.update(first_names_female)
-
+    first_names: Dict[str, float] = first_names_male.copy() | first_names_female
     # New Zealand surnames compiled (and cleaned up) from the following sources:
     #
     # NZ Cemetery plot data:

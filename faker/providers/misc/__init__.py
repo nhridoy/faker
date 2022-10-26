@@ -65,9 +65,7 @@ class Provider(BaseProvider):
         :sample: raw_output=True
         """
         res: hashlib._Hash = hashlib.md5(str(self.generator.random.random()).encode())
-        if raw_output:
-            return res.digest()
-        return res.hexdigest()
+        return res.digest() if raw_output else res.hexdigest()
 
     def sha1(self, raw_output: bool = False) -> Union[bytes, str]:
         """Generate a random SHA1 hash.
@@ -79,9 +77,7 @@ class Provider(BaseProvider):
         :sample: raw_output=True
         """
         res: hashlib._Hash = hashlib.sha1(str(self.generator.random.random()).encode())
-        if raw_output:
-            return res.digest()
-        return res.hexdigest()
+        return res.digest() if raw_output else res.hexdigest()
 
     def sha256(self, raw_output: bool = False) -> Union[bytes, str]:
         """Generate a random SHA256 hash.
@@ -93,9 +89,7 @@ class Provider(BaseProvider):
         :sample: raw_output=True
         """
         res: hashlib._Hash = hashlib.sha256(str(self.generator.random.random()).encode())
-        if raw_output:
-            return res.digest()
-        return res.hexdigest()
+        return res.digest() if raw_output else res.hexdigest()
 
     def uuid4(
         self,
@@ -112,9 +106,7 @@ class Provider(BaseProvider):
         """
         # Based on http://stackoverflow.com/q/41186818
         generated_uuid: uuid.UUID = uuid.UUID(int=self.generator.random.getrandbits(128), version=4)
-        if cast_to is not None:
-            return cast_to(generated_uuid)
-        return generated_uuid
+        return cast_to(generated_uuid) if cast_to is not None else generated_uuid
 
     def password(
         self,
@@ -535,7 +527,7 @@ class Provider(BaseProvider):
             "name": "{{name}}",
             "residency": "{{address}}",
         }
-        data_columns: Union[List, Dict] = data_columns if data_columns else default_data_columns
+        data_columns: Union[List, Dict] = data_columns or default_data_columns
 
         def process_list_structure(data: Sequence[Any]) -> Any:
             entry: Dict[str, Any] = {}
@@ -630,7 +622,7 @@ class Provider(BaseProvider):
             (20, "name"),
             (3, "pyint", {"max_value": 20}),
         ]
-        data_columns = data_columns if data_columns else default_data_columns
+        data_columns = data_columns or default_data_columns
         align_map = {
             "left": "<",
             "middle": "^",

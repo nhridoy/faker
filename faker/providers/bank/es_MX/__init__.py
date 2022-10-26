@@ -10,10 +10,11 @@ def get_clabe_control_digit(clabe: str) -> int:
     :return: The CLABE checksum digit.
     """
     factors = [3, 7, 1]
-    products: List[int] = []
+    products: List[int] = [
+        (int(digit) * factors[i % 3]) % 10
+        for i, digit in enumerate(clabe[:17])
+    ]
 
-    for i, digit in enumerate(clabe[:17]):
-        products.append((int(digit) * factors[i % 3]) % 10)
 
     return (10 - sum(products)) % 10
 

@@ -148,11 +148,11 @@ class ProviderMethodDocstring:
     def _beautify_kwargs(self, kwargs):
         def _repl_whitespace(match):
             quoted = match.group(1) or match.group(2)
-            return quoted if quoted else ""
+            return quoted or ""
 
         def _repl_comma(match):
             quoted = match.group(1) or match.group(2)
-            return quoted if quoted else ", "
+            return quoted or ", "
 
         # First, remove all whitespaces and tabs not within quotes
         result = re.sub(r'("[^"]*")|(\'[^\']*\')|[ \t]+', _repl_whitespace, kwargs)

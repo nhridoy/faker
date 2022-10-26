@@ -172,7 +172,7 @@ class _LocaleNorthAmericaMixin(_LocaleCommonMixin):
         for _ in range(100):
             # Be aware that there are other unsafe combinations
             unsafe_base = f"{faker.random_int(0, 99):02}000{faker.random_int(3, 4)}"
-            safe_base = unsafe_base[:2] + "0000"
+            safe_base = f"{unsafe_base[:2]}0000"
             number_system_digit = faker.random_int(0, 1)
 
             # Safe mode will create a UPC-E barcode with the safe base

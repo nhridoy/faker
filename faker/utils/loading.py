@@ -11,20 +11,17 @@ def get_path(module: ModuleType) -> str:
     if getattr(sys, "frozen", False):
         # frozen
 
-        if getattr(sys, "_MEIPASS", False):
-            # PyInstaller
-            lib_dir = Path(getattr(sys, "_MEIPASS"))
-        else:
-            # others
-            lib_dir = Path(sys.executable).parent / "lib"
+        lib_dir = (
+            Path(getattr(sys, "_MEIPASS"))
+            if getattr(sys, "_MEIPASS", False)
+            else Path(sys.executable).parent / "lib"
+        )
 
         path = lib_dir.joinpath(*module.__package__.split("."))  # type: ignore
+    elif module.__file__ is not None:
+        path = Path(module.__file__).parent
     else:
-        # unfrozen
-        if module.__file__ is not None:
-            path = Path(module.__file__).parent
-        else:
-            raise RuntimeError(f"Can't find path from module `{module}.")
+        raise RuntimeError(f"Can't find path from module `{module}.")
     return str(path)
 
 

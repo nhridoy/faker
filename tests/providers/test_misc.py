@@ -43,7 +43,7 @@ def faker_with_foobar(request):
 
 class _FooBarProvider:
     def foo_bar(self, param: str = None) -> str:
-        return "FooBar" + str(param) if param else "FooBar"
+        return f"FooBar{param}" if param else "FooBar"
 
     def test_integer(self, multi=1) -> int:
         return 1 * multi
@@ -390,7 +390,6 @@ class TestMiscProvider:
     def test_dsv_with_row_ids(self, faker, num_samples):
         data_columns = ["????", "?????"]
         for _ in range(num_samples):
-            counter = 0
             num_rows = faker.random.randint(1, 1000)
             dsv = faker.dsv(
                 header=None,
@@ -402,9 +401,8 @@ class TestMiscProvider:
 
             # Verify each row has correct number of columns
             # and row ids increment correctly
-            for row in reader:
+            for counter, row in enumerate(reader, start=1):
                 assert len(row) == len(data_columns) + 1
-                counter += 1
                 assert row[0] == str(counter)
 
             # Verify correct number of lines read
@@ -682,7 +680,7 @@ class TestMiscProvider:
 
         for row in fixed_width_string.split("\n"):
             assert len(row) == 18
-            assert row[0:9].strip() == "FooBarBaz"
+            assert row[:9].strip() == "FooBarBaz"
             assert row[9:18].strip() == "FooBarBAR"
 
     def test_fixed_width_invalid_arguments_type(self, faker_with_foobar):

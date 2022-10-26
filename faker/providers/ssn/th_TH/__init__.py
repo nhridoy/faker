@@ -20,10 +20,7 @@ class Provider(BaseProvider):
         category = randint(1, 8)
         province = randint(10, 96)
         amphoe = 0
-        if province == 10:  # Bangkok
-            amphoe = randint(1, 50)  # Bangkok has district number up to 50
-        else:
-            amphoe = randint(1, 20)  # Provinces outside Bangkok has 20 or less
+        amphoe = randint(1, 50) if province == 10 else randint(1, 20)
         birth_book = randint(1, 99999)
         birth_sheet = randint(1, 99)
 
@@ -47,9 +44,7 @@ class Provider(BaseProvider):
         if checksum > 9:
             checksum = checksum - 10
 
-        nat_id = f"{category:01d}-{province:02d}{amphoe:02d}-{birth_book:05d}-{birth_sheet:02d}-{checksum:01d}"
-
-        return nat_id
+        return f"{category:01d}-{province:02d}{amphoe:02d}-{birth_book:05d}-{birth_sheet:02d}-{checksum:01d}"
 
     def vat_id(self) -> str:
         """

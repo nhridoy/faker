@@ -58,17 +58,18 @@ class ParseError(ValueError):
     pass
 
 
-timedelta_pattern: str = r""
-for name, sym in [
-    ("years", "y"),
-    ("months", "M"),
-    ("weeks", "w"),
-    ("days", "d"),
-    ("hours", "h"),
-    ("minutes", "m"),
-    ("seconds", "s"),
-]:
-    timedelta_pattern += r"((?P<{}>(?:\+|-)\d+?){})?".format(name, sym)
+timedelta_pattern: str = r"".join(
+    f"((?P<{name}>(?:\+|-)\d+?){sym})?"
+    for name, sym in [
+        ("years", "y"),
+        ("months", "M"),
+        ("weeks", "w"),
+        ("days", "d"),
+        ("hours", "h"),
+        ("minutes", "m"),
+        ("seconds", "s"),
+    ]
+)
 
 
 class Provider(BaseProvider):
@@ -1923,10 +1924,7 @@ class Provider(BaseProvider):
 
     @classmethod
     def _parse_start_datetime(cls, value: Optional[DateParseType]) -> int:
-        if value is None:
-            return 0
-
-        return cls._parse_date_time(value)
+        return 0 if value is None else cls._parse_date_time(value)
 
     @classmethod
     def _parse_end_datetime(cls, value: Optional[DateParseType]) -> int:
@@ -1941,10 +1939,9 @@ class Provider(BaseProvider):
         if not parts:
             raise ParseError(f"Can't parse date string `{value}`")
         parts = parts.groupdict()
-        time_params: Dict[str, float] = {}
-        for (name_, param_) in parts.items():
-            if param_:
-                time_params[name_] = int(param_)
+        time_params: Dict[str, float] = {
+            name_: int(param_) for name_, param_ in parts.items() if param_
+        }
 
         if "years" in time_params:
             if "days" not in time_params:
@@ -2179,7 +2176,7 @@ class Provider(BaseProvider):
             return self.date_time_between_dates(this_century_start, next_century_start, tzinfo)
         elif not before_now and after_now:
             return self.date_time_between_dates(now, next_century_start, tzinfo)
-        elif not after_now and before_now:
+        elif before_now:
             return self.date_time_between_dates(this_century_start, now, tzinfo)
         else:
             return now
@@ -2207,7 +2204,7 @@ class Provider(BaseProvider):
             return self.date_time_between_dates(this_decade_start, next_decade_start, tzinfo)
         elif not before_now and after_now:
             return self.date_time_between_dates(now, next_decade_start, tzinfo)
-        elif not after_now and before_now:
+        elif before_now:
             return self.date_time_between_dates(this_decade_start, now, tzinfo)
         else:
             return now
@@ -2235,7 +2232,7 @@ class Provider(BaseProvider):
             return self.date_time_between_dates(this_year_start, next_year_start, tzinfo)
         elif not before_now and after_now:
             return self.date_time_between_dates(now, next_year_start, tzinfo)
-        elif not after_now and before_now:
+        elif before_now:
             return self.date_time_between_dates(this_year_start, now, tzinfo)
         else:
             return now
@@ -2263,7 +2260,7 @@ class Provider(BaseProvider):
             return self.date_time_between_dates(this_month_start, next_month_start, tzinfo)
         elif not before_now and after_now:
             return self.date_time_between_dates(now, next_month_start, tzinfo)
-        elif not after_now and before_now:
+        elif before_now:
             return self.date_time_between_dates(this_month_start, now, tzinfo)
         else:
             return now
@@ -2285,7 +2282,7 @@ class Provider(BaseProvider):
             return self.date_between_dates(this_century_start, next_century_start)
         elif not before_today and after_today:
             return self.date_between_dates(today, next_century_start)
-        elif not after_today and before_today:
+        elif before_today:
             return self.date_between_dates(this_century_start, today)
         else:
             return today
@@ -2307,7 +2304,7 @@ class Provider(BaseProvider):
             return self.date_between_dates(this_decade_start, next_decade_start)
         elif not before_today and after_today:
             return self.date_between_dates(today, next_decade_start)
-        elif not after_today and before_today:
+        elif before_today:
             return self.date_between_dates(this_decade_start, today)
         else:
             return today
@@ -2329,7 +2326,7 @@ class Provider(BaseProvider):
             return self.date_between_dates(this_year_start, next_year_start)
         elif not before_today and after_today:
             return self.date_between_dates(today, next_year_start)
-        elif not after_today and before_today:
+        elif before_today:
             return self.date_between_dates(this_year_start, today)
         else:
             return today
@@ -2351,7 +2348,7 @@ class Provider(BaseProvider):
             return self.date_between_dates(this_month_start, next_month_start)
         elif not before_today and after_today:
             return self.date_between_dates(today, next_month_start)
-        elif not after_today and before_today:
+        elif before_today:
             return self.date_between_dates(this_month_start, today)
         else:
             return today

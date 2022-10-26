@@ -217,7 +217,7 @@ class Provider(BaseProvider):
         :sample:
         :sample: category='application'
         """
-        category = category if category else self.random_element(list(self.mime_types.keys()))
+        category = category or self.random_element(list(self.mime_types.keys()))
         return self.random_element(self.mime_types[category])
 
     def file_name(self, category: Optional[str] = None, extension: Optional[str] = None) -> str:
@@ -276,7 +276,7 @@ class Provider(BaseProvider):
         """
         file: str = self.file_name(category, extension)
         path: str = f"/{file}"
-        for _ in range(0, depth):
+        for _ in range(depth):
             path = f"/{self.generator.word()}{path}"
         return path if absolute else path[1:]
 
@@ -292,8 +292,7 @@ class Provider(BaseProvider):
         if prefix is None:
             prefix = self.random_element(self.unix_device_prefixes)
         suffix: str = self.random_element(string.ascii_lowercase)
-        path = "/dev/%s%s" % (prefix, suffix)
-        return path
+        return f"/dev/{prefix}{suffix}"
 
     def unix_partition(self, prefix: Optional[str] = None) -> str:
         """Generate a Unix partition name.

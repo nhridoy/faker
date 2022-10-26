@@ -537,7 +537,7 @@ class Provider(AddressProvider):
         """
         value = self.bothify(self.random_element(self.secondary_address_formats))
         word_list = value.split(" ")
-        return word_list[0] + " " + translate_to_bengali_digits(word_list[1])
+        return f"{word_list[0]} {translate_to_bengali_digits(word_list[1])}"
 
     def town(self) -> str:
         """

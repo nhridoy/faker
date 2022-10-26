@@ -421,7 +421,7 @@ class Provider(AddressProvider):
         return self.random_element(self.cities)
 
     def city_with_postcode(self) -> str:
-        return self.postcode() + " " + self.random_element(self.cities)
+        return f"{self.postcode()} {self.random_element(self.cities)}"
 
     def administrative_unit(self) -> str:
         """

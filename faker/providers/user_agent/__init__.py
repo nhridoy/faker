@@ -168,7 +168,7 @@ class Provider(BaseProvider):
                 saf,
             ),
             tmplt.format(
-                "Linux; {}".format(self.android_platform_token()),
+                f"Linux; {self.android_platform_token()}",
                 saf,
                 self.generator.random.randint(version_from, version_to),
                 self.generator.random.randint(build_from, build_to),
@@ -183,7 +183,8 @@ class Provider(BaseProvider):
             ),
         )
 
-        return "Mozilla/5.0 " + self.random_element(platforms)
+
+        return f"Mozilla/5.0 {self.random_element(platforms)}"
 
     def firefox(self) -> str:
         """Generate a Mozilla Firefox web browser user agent string."""
@@ -203,7 +204,8 @@ class Provider(BaseProvider):
         tmplt_mac: str = "({0}; rv:1.9.{1}.20) {2}"
         tmplt_and: str = "({0}; Mobile; rv:{1}.0) Gecko/{1}.0 Firefox/{1}.0"
         tmplt_ios: str = "({0}) AppleWebKit/{1} (KHTML, like Gecko) FxiOS/{2}.{3}.0 Mobile/{4} Safari/{1}"
-        saf: str = "{}.{}".format(self.generator.random.randint(531, 536), self.generator.random.randint(0, 2))
+        saf: str = f"{self.generator.random.randint(531, 536)}.{self.generator.random.randint(0, 2)}"
+
         bld: str = self.lexify(self.numerify("##?###"), string.ascii_uppercase)
         bld2: str = self.lexify(self.numerify("#?####"), string.ascii_lowercase)
         platforms: ElementsType = (
@@ -233,7 +235,7 @@ class Provider(BaseProvider):
             ),
         )
 
-        return "Mozilla/5.0 " + self.random_element(platforms)
+        return f"Mozilla/5.0 {self.random_element(platforms)}"
 
     def safari(self) -> str:
         """Generate a Safari web browser user agent string."""
@@ -244,10 +246,11 @@ class Provider(BaseProvider):
         )
 
         ver: str = (
-            f"{self.generator.random.randint(4, 5)}.{self.generator.random.randint(0, 1)}"
-            if not self.generator.random.getrandbits(1)
-            else f"{self.generator.random.randint(4, 5)}.0.{self.generator.random.randint(1, 5)}"
+            f"{self.generator.random.randint(4, 5)}.0.{self.generator.random.randint(1, 5)}"
+            if self.generator.random.getrandbits(1)
+            else f"{self.generator.random.randint(4, 5)}.{self.generator.random.randint(0, 1)}"
         )
+
 
         tmplt_win: str = "(Windows; U; {0}) AppleWebKit/{1} (KHTML, like Gecko)" " Version/{2} Safari/{3}"
         tmplt_mac: str = "({0} rv:{1}.0; {2}) AppleWebKit/{3} (KHTML, like Gecko)" " Version/{4} Safari/{5}"
@@ -278,7 +281,7 @@ class Provider(BaseProvider):
             ),
         )
 
-        return "Mozilla/5.0 " + self.random_element(platforms)
+        return f"Mozilla/5.0 {self.random_element(platforms)}"
 
     def opera(self) -> str:
         """Generate an Opera web browser user agent string."""

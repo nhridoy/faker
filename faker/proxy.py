@@ -94,11 +94,10 @@ class Faker:
         :param attr: attribute name
         :return: the appropriate attribute
         """
-        if attr == "seed":
-            msg = "Calling `.seed()` on instances is deprecated. " "Use the class method `Faker.seed()` instead."
-            raise TypeError(msg)
-        else:
+        if attr != "seed":
             return super().__getattribute__(attr)
+        msg = "Calling `.seed()` on instances is deprecated. " "Use the class method `Faker.seed()` instead."
+        raise TypeError(msg)
 
     def __getattr__(self, attr: str) -> Any:
         """
@@ -110,10 +109,10 @@ class Faker:
         if len(self._factories) == 1:
             return getattr(self._factories[0], attr)
         elif attr in self.generator_attrs:
-            msg = "Proxying calls to `%s` is not implemented in multiple locale mode." % attr
+            msg = f"Proxying calls to `{attr}` is not implemented in multiple locale mode."
             raise NotImplementedError(msg)
         elif self.cache_pattern.match(attr):
-            msg = "Cached attribute `%s` does not exist" % attr
+            msg = f"Cached attribute `{attr}` does not exist"
             raise AttributeError(msg)
         else:
             factory = self._select_factory(attr)
@@ -155,11 +154,11 @@ class Faker:
 
         if Generator._global_seed is not Sentinel:
             random.seed(Generator._global_seed)  # type: ignore
-        if weights:
-            factory = self._select_factory_distribution(factories, weights)
-        else:
-            factory = self._select_factory_choice(factories)
-        return factory
+        return (
+            self._select_factory_distribution(factories, weights)
+            if weights
+            else self._select_factory_choice(factories)
+        )
 
     def _select_factory_distribution(self, factories, weights):
         return choices_distribution(factories, weights, random, length=1)[0]
@@ -239,9 +238,8 @@ class Faker:
 
         if len(self._factories) == 1:
             return self._factories[0].random
-        else:
-            msg = "Proxying `random` getter calls is not implemented in multiple locale mode."
-            raise NotImplementedError(msg)
+        msg = "Proxying `random` getter calls is not implemented in multiple locale mode."
+        raise NotImplementedError(msg)
 
     @random.setter
     def random(self, value: Random) -> None:
@@ -292,11 +290,7 @@ class UniqueProxy:
             raise TypeError("Accessing non-functions through .unique is not supported.")
 
     def __getstate__(self):
-        # Copy the object's state from self.__dict__ which contains
-        # all our instance attributes. Always use the dict.copy()
-        # method to avoid modifying the original state.
-        state = self.__dict__.copy()
-        return state
+        return self.__dict__.copy()
 
     def __setstate__(self, state):
         self.__dict__.update(state)

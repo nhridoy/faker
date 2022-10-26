@@ -113,7 +113,7 @@ class Provider(AutomotiveProvider):
             lambda x: self.random_element(self.license_plate_old_format_suffix_letters),
             "#### ??",
         )
-        return province_prefix + " " + self.numerify(temp)
+        return f"{province_prefix} {self.numerify(temp)}"
 
     def license_plate(self) -> str:
         """Generate a license plate.

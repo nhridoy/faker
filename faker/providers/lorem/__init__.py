@@ -68,10 +68,8 @@ class Provider(BaseProvider):
             word_list = self.word_list  # type: ignore[attr-defined]
 
         if unique:
-            unique_samples = cast(List[str], self.random_sample(word_list, length=nb))
-            return unique_samples
-        samples = cast(List[str], self.random_choices(word_list, length=nb))
-        return samples
+            return cast(List[str], self.random_sample(word_list, length=nb))
+        return cast(List[str], self.random_choices(word_list, length=nb))
 
     def word(self, part_of_speech: str = None, ext_word_list: Optional[Sequence[str]] = None) -> str:
         """Generate a word.
@@ -126,7 +124,7 @@ class Provider(BaseProvider):
         :sample: nb=5
         :sample: nb=5, ext_word_list=['abc', 'def', 'ghi', 'jkl']
         """
-        return [self.sentence(ext_word_list=ext_word_list) for _ in range(0, nb)]
+        return [self.sentence(ext_word_list=ext_word_list) for _ in range(nb)]
 
     def paragraph(
         self, nb_sentences: int = 3, variable_nb_sentences: bool = True, ext_word_list: Optional[Sequence[str]] = None
@@ -155,9 +153,9 @@ class Provider(BaseProvider):
         if variable_nb_sentences:
             nb_sentences = self.randomize_nb_elements(nb_sentences, min=1)
 
-        para = self.word_connector.join(self.sentences(nb_sentences, ext_word_list=ext_word_list))
-
-        return para
+        return self.word_connector.join(
+            self.sentences(nb_sentences, ext_word_list=ext_word_list)
+        )
 
     def paragraphs(self, nb: int = 3, ext_word_list: Optional[Sequence[str]] = None) -> List[str]:
         """Generate a list of paragraphs.
@@ -170,7 +168,7 @@ class Provider(BaseProvider):
         :sample: nb=5
         :sample: nb=5, ext_word_list=['abc', 'def', 'ghi', 'jkl']
         """
-        return [self.paragraph(ext_word_list=ext_word_list) for _ in range(0, nb)]
+        return [self.paragraph(ext_word_list=ext_word_list) for _ in range(nb)]
 
     def text(self, max_nb_chars: int = 200, ext_word_list: Optional[Sequence[str]] = None) -> str:
         """Generate a text string.
@@ -244,4 +242,4 @@ class Provider(BaseProvider):
         :sample: nb_texts=5, max_nb_chars=50,
                  ext_word_list=['abc', 'def', 'ghi', 'jkl']
         """
-        return [self.text(max_nb_chars, ext_word_list) for _ in range(0, nb_texts)]
+        return [self.text(max_nb_chars, ext_word_list) for _ in range(nb_texts)]

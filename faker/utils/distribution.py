@@ -41,7 +41,7 @@ def choices_distribution_unique(
     choices = []
     items = list(a)
     probabilities = list(p)
-    for i in range(length):
+    for _ in range(length):
         cdf = tuple(cumsum(probabilities))
         normal = cdf[-1]
         cdf2 = [i / normal for i in cdf]
@@ -67,22 +67,23 @@ def choices_distribution(
         assert len(a) == len(p)
 
     if hasattr(random, "choices"):
-        if length == 1 and p is None:
-            return [random.choice(a)]
-        else:
-            return random.choices(a, weights=p, k=length)
-    else:
-        choices = []
+        return (
+            [random.choice(a)]
+            if length == 1 and p is None
+            else random.choices(a, weights=p, k=length)
+        )
 
-        if p is None:
-            p = itertools.repeat(1, len(a))  # type: ignore
+    choices = []
 
-        cdf = list(cumsum(p))  # type: ignore
-        normal = cdf[-1]
-        cdf2 = [i / normal for i in cdf]
-        for i in range(length):
-            uniform_sample = random_sample(random=random)
-            idx = bisect.bisect_right(cdf2, uniform_sample)
-            item = a[idx]
-            choices.append(item)
-        return choices
+    if p is None:
+        p = itertools.repeat(1, len(a))  # type: ignore
+
+    cdf = list(cumsum(p))  # type: ignore
+    normal = cdf[-1]
+    cdf2 = [i / normal for i in cdf]
+    for _ in range(length):
+        uniform_sample = random_sample(random=random)
+        idx = bisect.bisect_right(cdf2, uniform_sample)
+        item = a[idx]
+        choices.append(item)
+    return choices

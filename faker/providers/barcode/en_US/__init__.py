@@ -185,11 +185,10 @@ class Provider(BarcodeProvider):
         :sample: upc_ae_mode=True, base='120003', number_system_digit=0
         :sample: upc_ae_mode=True, base='120004', number_system_digit=0
         """
-        if upc_ae_mode is True:
+        if upc_ae_mode:
             return self._upc_ae(base=base, number_system_digit=number_system_digit)
-        else:
-            ean13 = self.ean13(leading_zero=True)
-            return ean13[1:]
+        ean13 = self.ean13(leading_zero=True)
+        return ean13[1:]
 
     def upc_e(
         self,
@@ -241,9 +240,8 @@ class Provider(BarcodeProvider):
         :sample: base='120003', number_system_digit=0, safe_mode=False
         :sample: base='120004', number_system_digit=0, safe_mode=False
         """
-        if safe_mode is not False:
-            upc_ae = self._upc_ae(base=base, number_system_digit=number_system_digit)
+        upc_ae = self._upc_ae(base=base, number_system_digit=number_system_digit)
+        if safe_mode:
             return self._convert_upc_a2e(upc_ae)
         else:
-            upc_ae = self._upc_ae(base=base, number_system_digit=number_system_digit)
             return upc_ae[0] + "".join(str(x) for x in base or "") + upc_ae[-1]

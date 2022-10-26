@@ -13,7 +13,7 @@ class Provider(SsnProvider):
     def _org_to_vat(org_id: str) -> str:
         org_id = org_id.replace("-", "")
         if len(org_id) == 10:
-            org_id = "16" + org_id
+            org_id = f"16{org_id}"
         return f"SE{org_id}01"
 
     def ssn(
@@ -44,9 +44,7 @@ class Provider(SsnProvider):
         suffix = f"{self.generator.random.randrange(0, 999):03}"
         luhn_checksum = str(calculate_luhn(int(chk_date + suffix)))
         hyphen = "-" if dash else ""
-        pnr = f"{pnr_date}{hyphen}{suffix}{luhn_checksum}"
-
-        return pnr
+        return f"{pnr_date}{hyphen}{suffix}{luhn_checksum}"
 
     ORG_ID_DIGIT_1 = (1, 2, 3, 5, 6, 7, 8, 9)
 
@@ -58,8 +56,10 @@ class Provider(SsnProvider):
         """
         first_digits = list(self.ORG_ID_DIGIT_1)
         random.shuffle(first_digits)
-        onr_one = str(first_digits.pop())
-        onr_one += str(self.generator.random.randrange(0, 9)).zfill(1)
+        onr_one = str(first_digits.pop()) + str(
+            self.generator.random.randrange(0, 9)
+        ).zfill(1)
+
         onr_one += str(self.generator.random.randrange(20, 99))
         onr_one += str(self.generator.random.randrange(0, 99)).zfill(2)
         onr_two = str(self.generator.random.randrange(0, 999)).zfill(3)
@@ -67,8 +67,7 @@ class Provider(SsnProvider):
         prefix = "16" if long else ""
         hyphen = "-" if dash else ""
 
-        org_id = f"{prefix}{onr_one}{hyphen}{onr_two}{luhn_checksum}"
-        return org_id
+        return f"{prefix}{onr_one}{hyphen}{onr_two}{luhn_checksum}"
 
     def vat_id(self) -> str:
         """
@@ -76,8 +75,7 @@ class Provider(SsnProvider):
         :return: A random Swedish VAT ID, based on a valid Org ID
         """
         oid = self.org_id(long=True, dash=False)
-        vid = Provider._org_to_vat(oid)
-        return vid
+        return Provider._org_to_vat(oid)
 
     def org_and_vat_id(self, long: bool = False, dash: bool = True) -> Tuple[str, str]:
         """Returns matching Org ID and VAT number"""

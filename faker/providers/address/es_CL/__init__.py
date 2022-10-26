@@ -628,7 +628,7 @@ class Provider(AddressProvider):
     def commune_and_region(self) -> str:
         commune_code = self.commune_code()
         commune_name = self.communes[commune_code]
-        region_index = int(commune_code[0:2]) - 1
+        region_index = int(commune_code[:2]) - 1
         region_name = tuple(self.regions.values())[region_index]
 
         return "{:s}, {:s}".format(commune_name, region_name)

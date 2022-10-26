@@ -1305,7 +1305,10 @@ class Provider(AddressProvider):
         """
         :example: "Calle 1 # 2-3"
         """
-        return self.street_name() + " # " + self.building_number() + self.random_element(("", " Sur", " Este"))
+        return (
+            f"{self.street_name()} # {self.building_number()}"
+            + self.random_element(("", " Sur", " Este"))
+        )
 
     def postcode(self) -> str:
         """
@@ -1319,7 +1322,7 @@ class Provider(AddressProvider):
         """
         municipality: Tuple[str, str] = self.random_element(self.municipalities)
         municipality_code = municipality[0]
-        department_code = municipality_code[0:2]
+        department_code = municipality_code[:2]
         is_department_capital = municipality_code[-3:] == "001"
 
         secondary_address: str = self.random_element(
@@ -1330,6 +1333,11 @@ class Provider(AddressProvider):
         )
         postcode = "\n" + department_code + self.numerify("####")
         municipality_name = "\n" + municipality[1]
-        department_name = ", " + self.departments[department_code] if not is_department_capital else ""
+        department_name = (
+            ""
+            if is_department_capital
+            else f", {self.departments[department_code]}"
+        )
+
 
         return self.street_address() + secondary_address + postcode + municipality_name + department_name

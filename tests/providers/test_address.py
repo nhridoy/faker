@@ -207,7 +207,7 @@ class TestCsCz:
             city_with_postcode = faker.city_with_postcode()
             assert isinstance(city_with_postcode, str)
             match = re.fullmatch(r"\d{3} \d{2} (?P<city>.*)", city_with_postcode)
-            assert match.group("city") in CsCzAddressProvider.cities
+            assert match["city"] in CsCzAddressProvider.cities
 
 
 class TestDaDk:
@@ -1060,9 +1060,9 @@ class TestItIt:
             assert isinstance(postcode_city_province, str)
             match = re.fullmatch(r"(?P<cap>\d{5}), (?P<city>.*) \((?P<province>[A-Z]{2})\)", postcode_city_province)
             assert match
-            assert match.group("cap") in ItItAddressProvider.postcode_formats
-            assert match.group("city") in ItItAddressProvider.cities
-            assert match.group("province") in ItItAddressProvider.states_abbr
+            assert match["cap"] in ItItAddressProvider.postcode_formats
+            assert match["city"] in ItItAddressProvider.cities
+            assert match["province"] in ItItAddressProvider.states_abbr
 
     def test_city_prefix(self, faker, num_samples):
         for _ in range(num_samples):
@@ -1099,7 +1099,7 @@ class TestJaJp:
             assert isinstance(chome, str)
             match = re.fullmatch(r"(?P<chome_number>\d{1,2})丁目", chome)
             assert match
-            assert 1 <= int(match.group("chome_number")) <= 42
+            assert 1 <= int(match["chome_number"]) <= 42
 
     def test_ban(self, faker, num_samples):
         for _ in range(num_samples):
@@ -1107,7 +1107,7 @@ class TestJaJp:
             assert isinstance(ban, str)
             match = re.fullmatch(r"(?P<ban_number>\d{1,2})番", ban)
             assert match
-            assert 1 <= int(match.group("ban_number")) <= 27
+            assert 1 <= int(match["ban_number"]) <= 27
 
     def test_gou(self, faker, num_samples):
         for _ in range(num_samples):
@@ -1115,7 +1115,7 @@ class TestJaJp:
             assert isinstance(gou, str)
             match = re.fullmatch(r"(?P<gou_number>\d{1,2})号", gou)
             assert match
-            assert 1 <= int(match.group("gou_number")) <= 20
+            assert 1 <= int(match["gou_number"]) <= 20
 
     def test_town(self, faker, num_samples):
         for _ in range(num_samples):
@@ -1829,7 +1829,7 @@ class TestSkSk:
             city_with_postcode = faker.city_with_postcode()
             assert isinstance(city_with_postcode, str)
             match = re.fullmatch(r"\d{3} \d{2} (?P<city>.*)", city_with_postcode)
-            assert match.group("city") in SkSkAddressProvider.cities
+            assert match["city"] in SkSkAddressProvider.cities
 
 
 class TestDeCh:
@@ -1937,7 +1937,7 @@ class TestRoRo:
             city_with_postcode = faker.city_with_postcode()
             assert isinstance(city_with_postcode, str)
             match = re.fullmatch(r"\d{6} (?P<city>.*)", city_with_postcode)
-            assert match.group("city") in RoRoAddressProvider.cities
+            assert match["city"] in RoRoAddressProvider.cities
 
 
 class TestEnNz:

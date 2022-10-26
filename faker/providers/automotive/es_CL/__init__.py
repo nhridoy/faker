@@ -32,8 +32,6 @@ class Provider(AutomotiveProvider):
 
     def license_plate_old(self) -> str:
         """Generate an old format license plate."""
-        format = "-####"
-
         letters = "".join(
             (
                 self.random_element(self.license_plate_old_format_first_letters),
@@ -41,7 +39,7 @@ class Provider(AutomotiveProvider):
             )
         )
 
-        return self.numerify(letters + format)
+        return self.numerify(f"{letters}-####")
 
     def license_plate_new(self) -> str:
         format = "????-##"

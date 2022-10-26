@@ -25,4 +25,4 @@ class Provider(SsnProvider):
         if lastDigit != 0:
             lastDigit = 10 - lastDigit
 
-        return str(newID) + str(lastDigit)
+        return newID + str(lastDigit)

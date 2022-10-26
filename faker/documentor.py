@@ -37,12 +37,12 @@ class Documentor:
         self.already_generated = [] if excludes is None else excludes[:]
         formatters = []
         providers: List[BaseProvider] = self.generator.get_providers()
-        for provider in providers[::-1]:  # reverse
-            if locale and provider.__lang__ and provider.__lang__ != locale:
-                continue
-            formatters.append(
-                (provider, self.get_provider_formatters(provider, **kwargs)),
-            )
+        formatters.extend(
+            (provider, self.get_provider_formatters(provider, **kwargs))
+            for provider in providers[::-1]
+            if not locale or not provider.__lang__ or provider.__lang__ == locale
+        )
+
         return formatters
 
     def get_provider_formatters(
@@ -66,12 +66,11 @@ class Documentor:
             if name == "binary":
                 faker_kwargs["length"] = 1024
             elif name in ["zip", "tar"]:
-                faker_kwargs.update(
-                    {
-                        "uncompressed_size": 1024,
-                        "min_file_size": 512,
-                    }
-                )
+                faker_kwargs |= {
+                    "uncompressed_size": 1024,
+                    "min_file_size": 512,
+                }
+
 
             if name == "enum":
                 faker_args = [FakerEnum]
@@ -87,12 +86,7 @@ class Documentor:
 
                         try:
                             default = argspec.defaults[i]
-                            if isinstance(default, str):
-                                default = repr(default)
-                            else:
-                                # TODO check default type
-                                default = f"{default}"
-
+                            default = repr(default) if isinstance(default, str) else f"{default}"
                             arg = f"{arg}={default}"
 
                         except IndexError:
@@ -104,9 +98,9 @@ class Documentor:
 
                 if with_args != "first":
                     if argspec.varargs:
-                        arguments.append("*" + argspec.varargs)
+                        arguments.append(f"*{argspec.varargs}")
                     if argspec.varkw:
-                        arguments.append("**" + argspec.varkw)
+                        arguments.append(f"**{argspec.varkw}")
 
             # build fake method signature
             signature = f"{prefix}{name}({', '.join(arguments)})"

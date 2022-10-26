@@ -36,7 +36,7 @@ class Provider(BaseProvider):
         number = int(f"{year}{month}{day}{sn}")
         birth_number = str(ceil(number / 11) * 11)
         if year == "00":
-            birth_number = "00" + birth_number
+            birth_number = f"00{birth_number}"
         elif year[0] == "0":
-            birth_number = "0" + birth_number
+            birth_number = f"0{birth_number}"
         return f"{birth_number[:6]}/{birth_number[6:]}"

@@ -43,9 +43,7 @@ def remove_accents(value: str) -> str:
 
     def replace_accented_character(match):
         matched = match.group(0)
-        if matched in search:
-            return replace[search.find(matched)]
-        return matched
+        return replace[search.find(matched)] if matched in search else matched
 
     return re.sub(r"[{}]+".format(search), replace_accented_character, value)
 
@@ -59,9 +57,7 @@ def latinize(value: str) -> str:
         search = ("Θ Χ Ψ " "θ χ ψ " "ΟΥ ΑΥ ΕΥ " "Ου Αυ Ευ " "ου αυ ευ").split()
         replace = ("TH CH PS " "th ch ps " "OU AU EU " "Ou Au Eu " "ou au eu").split()
         matched = match.group(0)
-        if matched in search:
-            return replace[search.index(matched)]
-        return matched
+        return replace[search.index(matched)] if matched in search else matched
 
     search = "ΑΒΓΔΕΖΗΙΚΛΜΝΞΟΠΡΣΣΤΥΦΩαβγδεζηικλμνξοπρσςτυφω"
     replace = "AVGDEZIIKLMNXOPRSSTUFOavgdeziiklmnxoprsstyfo"
